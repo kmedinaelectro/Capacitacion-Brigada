@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVA · Escena y Abordaje del Paciente · Brigada ElectroPlast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6F5;
+    --paper:#FFFFFF;
+    --ink:#1C2522;
+    --ink-soft:#54615C;
+    --line:#DDE3E0;
+    --blue:#1B4B66;
+    --blue-deep:#123244;
+    --red:#B93A2E;
+    --amber:#D99A2E;
+    --green:#2E8B57;
+    --green-bg:#E8F4EC;
+    --amber-bg:#FBF1DD;
+    --red-bg:#F8E7E4;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Source Sans 3', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    text-transform:uppercase;
+    color:var(--blue-deep);
+  }
+  .mono{font-family:'IBM Plex Mono', monospace; letter-spacing:0.02em;}
+
+  header.top{background:var(--blue-deep); color:#fff; padding:22px 20px 0 20px; position:relative; overflow:hidden;}
+  .top-inner{max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; position:relative; z-index:2;}
+  .brand-eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#8FB4C6; margin:0 0 4px 0;}
+  header.top h1{color:#fff; font-size:clamp(26px,4.6vw,40px); margin:0; line-height:0.98;}
+  header.top .sub{color:#C7D9E1; font-size:15px; margin-top:6px; max-width:560px;}
+  .back-link{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#8FB4C6; text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-bottom:10px;}
+  .back-link:hover{color:#fff;}
+  .ekg-wrap{height:40px; margin-top:14px; position:relative;}
+  .ekg-wrap svg{width:100%;height:100%;display:block;}
+  .ekg-line{fill:none; stroke:#4FA3C4; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:900; stroke-dashoffset:900; animation:draw 4.5s linear infinite;}
+  @keyframes draw{0%{stroke-dashoffset:900;} 60%{stroke-dashoffset:0;} 100%{stroke-dashoffset:-900;}}
+  .progress-shell{max-width:1100px; margin:16px auto 0 auto; padding:0 20px 18px 20px; position:relative; z-index:2;}
+  .progress-row{display:flex; align-items:center; gap:12px;}
+  .progress-track{flex:1; height:8px; background:rgba(255,255,255,0.15); border-radius:6px; overflow:hidden;}
+  .progress-fill{height:100%; background:linear-gradient(90deg,#4FA3C4,#7FD1A3); border-radius:6px; transition:width .4s ease; width:0%;}
+  .progress-label{font-family:'IBM Plex Mono',monospace; font-size:12px; color:#C7D9E1; white-space:nowrap;}
+
+  .wrap{max-width:1100px; margin:0 auto; padding:24px 20px 80px 20px; display:grid; grid-template-columns:250px 1fr; gap:24px; align-items:start;}
+  @media(max-width:840px){.wrap{grid-template-columns:1fr; padding-top:16px;}}
+
+  nav.stepper{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:10px; position:sticky; top:16px;}
+  @media(max-width:840px){nav.stepper{position:static; display:flex; overflow-x:auto; gap:6px; padding:10px 6px;}}
+  .step-item{display:flex; align-items:center; gap:10px; width:100%; padding:10px 10px; border-radius:10px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:'Source Sans 3',sans-serif; font-size:14px; color:var(--ink); transition:background .15s ease;}
+  @media(max-width:840px){.step-item{flex-direction:column; align-items:center; min-width:82px; text-align:center; font-size:11px; gap:4px;}}
+  .step-item:hover{background:#F0F3F2;}
+  .step-item.active{background:var(--blue); color:#fff;}
+  .step-item.active .step-num{background:#fff; color:var(--blue);}
+  .step-num{flex:none; width:26px;height:26px; border-radius:50%; background:#E4E9E7; color:var(--ink-soft); display:flex;align-items:center;justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px;font-weight:600;}
+  .step-num.done{background:var(--green); color:#fff;}
+  .step-item.active .step-num.done{background:#fff; color:var(--green);}
+  .step-title{flex:1; line-height:1.15;}
+
+  main.panel{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(20px,4vw,36px); min-height:400px;}
+  section{display:none;}
+  section.active{display:block; animation:fade .3s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .module-eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--blue); text-transform:uppercase; letter-spacing:0.14em; margin:0 0 4px 0;}
+  main.panel h2{font-size:clamp(24px,3.6vw,32px); margin:0 0 6px 0; color:var(--blue-deep);}
+  .objective{color:var(--ink-soft); font-size:15px; max-width:680px; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);}
+
+  .card{border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:14px; background:#FBFCFC;}
+  .card.warn{border-color:#E9C1BA; background:var(--red-bg);}
+  .card h3,.card h4{font-size:17px; margin:0 0 8px 0; color:var(--blue); display:flex; align-items:center; gap:8px; text-transform:none; font-family:'Source Sans 3'; font-weight:700; letter-spacing:0;}
+  .card ul{margin:6px 0 0 0; padding-left:20px;}
+  .card li{margin-bottom:5px; line-height:1.45; font-size:14.5px;}
+  .card p{line-height:1.5; font-size:14.5px; margin:6px 0;}
+  .tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; padding:2px 8px; border-radius:20px; background:var(--amber-bg); color:#8A5E10; margin-right:6px;}
+  .tag.red{background:var(--red-bg); color:var(--red);}
+  .tag.green{background:var(--green-bg); color:var(--green);}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr;}}
+
+  .btn{font-family:'Barlow Condensed',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; font-size:15px; padding:11px 22px; border-radius:8px; border:none; background:var(--blue); color:#fff; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .btn:hover{background:var(--blue-deep);}
+  .btn:disabled{background:#B9C2BF; cursor:not-allowed;}
+  .btn.secondary{background:transparent; color:var(--blue); border:1.5px solid var(--blue);}
+  .btn.secondary:hover{background:#EAF1F4;}
+  .btn-row{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; justify-content:space-between;}
+
+  /* ---- steps list (3S) ---- */
+  .step{display:flex; gap:16px; padding:16px 0; border-bottom:1px solid var(--line);}
+  .step:last-child{border-bottom:none;}
+  .step-letter{font-family:'Barlow Condensed'; font-weight:800; font-size:30px; color:var(--blue); width:48px; flex-shrink:0;}
+  .step.done .step-letter{color:var(--green);}
+  .step-body h4{margin:0 0 4px; font-size:16px; color:var(--blue-deep); text-transform:none; font-family:'Source Sans 3'; font-weight:700;}
+  .step-body p{margin:0; font-size:14px; color:var(--ink-soft);}
+  .step-check{margin-top:8px; background:none; border:1px solid var(--line); color:var(--ink-soft); font-family:'IBM Plex Mono'; font-size:11px; padding:5px 10px; border-radius:20px; cursor:pointer;}
+  .step.done .step-check{border-color:var(--green); color:var(--green);}
+
+  /* ---- XABCDE control panel ---- */
+  .control-panel{background:#EEF2F1; border:1px solid var(--line); border-radius:12px; padding:22px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin:16px 0 6px;}
+  .lamp{width:88px; text-align:center; padding:12px 6px 10px; background:#fff; border:1px solid var(--line); border-radius:10px; cursor:pointer; user-select:none; transition:border-color .15s;}
+  .lamp .bulb{width:22px; height:22px; border-radius:50%; margin:0 auto 7px; background:#E4E9E7; border:2px solid #D3DBD8; transition:background .25s, box-shadow .25s, border-color .25s;}
+  .lamp.on .bulb{background:var(--green); border-color:var(--green); box-shadow:0 0 10px rgba(46,139,87,.45);}
+  .lamp.on.x .bulb{background:var(--red); border-color:var(--red); box-shadow:0 0 10px rgba(185,58,46,.45);}
+  .lamp .letter{font-family:'Barlow Condensed'; font-weight:800; font-size:19px; color:var(--blue-deep);}
+  .lamp .label{font-family:'IBM Plex Mono'; font-size:9px; color:var(--ink-soft); margin-top:3px; text-transform:uppercase; letter-spacing:.03em; display:block;}
+  .lamp:hover{border-color:var(--blue);}
+  .abcde-detail{background:#EAF1F4; border-left:3px solid var(--blue); border-radius:0 10px 10px 0; padding:16px 20px; margin-top:14px;}
+  .abcde-detail h4{margin:0 0 8px; color:var(--blue-deep); font-size:17px; text-transform:none; font-family:'Source Sans 3'; font-weight:700;}
+
+  .mini-table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13.5px;}
+  .mini-table th, .mini-table td{border:1px solid var(--line); padding:6px 8px; text-align:left;}
+  .mini-table th{background:#EEF2F1; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase;}
+
+  /* ---- scenario simulator ---- */
+  .scenario-select{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:8px;}
+  .scenario-btn{flex:1 1 210px; background:#FBFCFC; border:1px solid var(--line); border-radius:10px; padding:14px 16px; cursor:pointer; text-align:left; color:var(--ink);}
+  .scenario-btn:hover{border-color:var(--blue);}
+  .scenario-btn .sc-tag{font-family:'IBM Plex Mono'; font-size:10px; color:var(--blue); display:block; margin-bottom:5px; text-transform:uppercase;}
+  .scenario-btn.done{border-color:var(--green);}
+  .scenario-btn.done .sc-tag{color:var(--green);}
+  .scene-box{background:#FBFCFC; border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-top:14px;}
+  .scene-box .situacion{font-size:14.5px; color:var(--ink); border-left:3px solid var(--ink-soft); padding-left:14px; margin-bottom:16px;}
+  .option-btn{display:block; width:100%; text-align:left; background:#fff; border:1px solid var(--line); color:var(--ink); padding:11px 14px; border-radius:8px; margin-bottom:9px; cursor:pointer; font-size:14px; font-family:'Source Sans 3';}
+  .option-btn:hover{border-color:var(--blue);}
+  .option-btn.correct{border-color:var(--green); background:var(--green-bg);}
+  .option-btn.incorrect{border-color:var(--red); background:var(--red-bg);}
+  .option-btn:disabled{cursor:default;}
+  .feedback{margin-top:10px; padding:13px 16px; border-radius:8px; font-size:13.5px; background:#fff; border:1px solid var(--line);}
+  .feedback.ok{border-color:#BFE1CC; background:var(--green-bg);}
+  .feedback.bad{border-color:#E9C1BA; background:var(--red-bg);}
+  .feedback b{color:var(--ink);}
+
+  /* ---- quiz ---- */
+  .quiz-q{margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--line);}
+  .quiz-q:last-child{border:none;}
+  .quiz-q p.q-text{color:var(--ink); font-weight:600; margin:0 0 9px; font-size:14.5px;}
+  .q-opt{display:flex; align-items:flex-start; gap:8px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:14px; color:var(--ink-soft);}
+  .q-opt:hover{background:#F0F3F2;}
+  .q-opt input{margin-top:3px;}
+  .quiz-result{text-align:center; padding:26px 20px; border-radius:12px; margin-top:10px;}
+  .quiz-result .score{font-family:'Barlow Condensed'; font-weight:800; font-size:46px; margin:0;}
+  .semaforo{display:inline-block; font-family:'IBM Plex Mono'; font-size:12px; padding:4px 12px; border-radius:20px; margin-top:6px;}
+
+  footer.foot{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:20px; font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div>
+      <a class="back-link" href="Ruta_Capacitacion_Brigada.html">← Ruta de capacitación</a>
+      <p class="brand-eyebrow">EVA · Complemento práctico · Módulos 2–3</p>
+      <h1>Escena y Abordaje<br>del Paciente</h1>
+      <p class="sub">Profundización y simulador de casos — refuerza la técnica de las 3S y la secuencia XABCDE de tu curso base, con escenarios de planta de inyección.</p>
+    </div>
+  </div>
+  <div class="ekg-wrap">
+    <svg viewBox="0 0 600 40" preserveAspectRatio="none">
+      <path class="ekg-line" d="M0,20 L60,20 L75,20 L85,4 L95,36 L105,12 L115,20 L180,20 L195,20 L205,8 L215,30 L225,16 L235,20 L300,20 L315,20 L325,4 L335,36 L345,12 L355,20 L420,20 L435,20 L445,8 L455,30 L465,16 L475,20 L540,20 L555,20 L565,4 L575,36 L585,12 L600,20"/>
+    </svg>
+  </div>
+  <div class="progress-shell">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 6 secciones</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="stepper" id="stepper"></nav>
+  <main class="panel" id="panelWrap">
+
+    <section id="sec-intro">
+      <p class="module-eyebrow">Introducción</p>
+      <h2>Por qué este módulo</h2>
+      <p class="objective">Ya completaste el Módulo 2 (Evaluación de la Escena) y el Módulo 3 (Abordaje del Paciente) del curso EVA, donde conociste la técnica de las <b>3S</b> y la secuencia <b>XABCDE</b>. Este módulo no reemplaza esos contenidos — los profundiza, paso a paso, y te da un simulador de casos de planta para practicar el criterio.</p>
+      <div class="grid2">
+        <div class="card"><h4><span class="tag">01</span>Técnica de las 3S</h4><ul><li>Seguridad, eScena, Situación — a fondo</li></ul></div>
+        <div class="card"><h4><span class="tag">02</span>Secuencia XABCDE</h4><ul><li>Panel interactivo por letra</li></ul></div>
+        <div class="card"><h4><span class="tag">03</span>Alertas y errores comunes</h4><ul><li>Lo que no debe pasar en una respuesta</li></ul></div>
+        <div class="card"><h4><span class="tag">04</span>Simulador de casos</h4><ul><li>4 escenarios de planta de inyección</li></ul></div>
+        <div class="card"><h4><span class="tag">05</span>Autoevaluación</h4><ul><li>10 preguntas, semáforo de resultado</li></ul></div>
+      </div>
+      <div class="btn-row"><span></span><button class="btn" onclick="goTo('sec-3s')">Empezar → Técnica de las 3S</button></div>
+    </section>
+
+    <section id="sec-3s">
+      <p class="module-eyebrow">01 · Antes de acercarte</p>
+      <h2>Técnica de las 3S</h2>
+      <p class="objective">Regla de oro: un brigadista lesionado deja de ayudar y se convierte en una segunda víctima. Las 3S se revisan siempre, en este orden, antes de tocar a nadie.</p>
+      <div id="stepsContainer"></div>
+      <div class="card" style="margin-top:16px;">
+        <h4>Precauciones universales y EPP</h4>
+        <p>Evita el contacto directo con sangre, saliva, vómito, orina o heces. Usa guantes y, si el caso lo requiere, mascarilla y lentes — son parte de las precauciones estándar junto con el lavado de manos.</p>
+      </div>
+      <div class="abcde-detail">
+        <h4>¿Cuándo sí se mueve a la víctima antes de revisarla?</h4>
+        <p style="margin:0; font-size:14px; color:var(--ink-soft);">Solo si hay <b style="color:var(--red)">peligro inminente</b> que no se puede controlar de otra forma: fuego, riesgo de explosión, derrame de químico que sigue expandiéndose, o la máquina sigue energizada y no se puede cortar. Si el peligro se puede controlar (parar la máquina, cortar energía, alejar a otros), no se mueve a la víctima — sobre todo si pudo haber golpe en cabeza, cuello o espalda.</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-intro')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-xabcde')">Siguiente → Secuencia XABCDE</button>
+      </div>
+    </section>
+
+    <section id="sec-xabcde">
+      <p class="module-eyebrow">02 · Revisión primaria</p>
+      <h2>Secuencia XABCDE</h2>
+      <p class="objective">Con la escena segura, tienes segundos para encontrar cualquier cosa que amenace la vida de la persona — cada letra tiene un tiempo orientativo de 10 segundos, salvo la X, que se atiende de inmediato. Toca cada letra del panel para ver qué se revisa.</p>
+
+      <div class="control-panel" id="controlPanel"></div>
+      <div id="abcdeDetail" class="abcde-detail" style="display:none;"></div>
+
+      <h3 style="font-size:18px; margin-top:24px;">El orden cambia según el tipo de paciente</h3>
+      <table class="mini-table">
+        <tr><th>Tipo de paciente</th><th>Orden de revisión</th></tr>
+        <tr><td>Médico (sin trauma visible)</td><td class="mono">A · B · C · D · E</td></tr>
+        <tr><td>Trauma (golpe, caída, atrapamiento)</td><td class="mono">X · A · B · C · D · E</td></tr>
+        <tr><td>Paro cardiorrespiratorio</td><td class="mono">C · A · B</td></tr>
+      </table>
+
+      <h3 style="font-size:18px; margin-top:22px;">Nivel de conciencia — método ADVI</h3>
+      <div class="grid2">
+        <div class="card"><h4><span class="tag green">A</span>Alerta</h4><ul><li>Responde de forma coherente, abre los ojos por sí sola.</li></ul></div>
+        <div class="card"><h4><span class="tag">V</span>Verbal</h4><ul><li>Abre los ojos o reacciona solo cuando le hablas fuerte.</li></ul></div>
+        <div class="card"><h4><span class="tag">D</span>Doloroso</h4><ul><li>Solo reacciona a un estímulo doloroso (ej. pellizco en el hombro).</li></ul></div>
+        <div class="card warn"><h4><span class="tag red">I</span>Inconsciente</h4><ul><li>No responde a nada. Máxima prioridad.</li></ul></div>
+      </div>
+
+      <h3 style="font-size:18px; margin-top:22px;">La decisión al final de la revisión primaria</h3>
+      <div class="grid2">
+        <div class="card warn"><h4 style="color:var(--red)">Alta prioridad</h4><ul><li>Hay algo en el XABCDE que amenaza la vida.</li><li>Se activa el protocolo de emergencia y traslado inmediato.</li><li>No se hace revisión secundaria todavía.</li></ul></div>
+        <div class="card"><h4 style="color:var(--green)">Sin amenaza a la vida</h4><ul><li>El XABCDE está estable.</li><li>Se continúa con la revisión secundaria y el historial SAMPLE que ya viste en el curso base.</li></ul></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-3s')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-alertas')">Siguiente → Alertas y errores</button>
+      </div>
+    </section>
+
+    <section id="sec-alertas">
+      <p class="module-eyebrow">03 · Criterio clínico</p>
+      <h2>Señales de Alerta y Errores Comunes</h2>
+      <p class="objective">Esto resume lo que un brigadista con poca experiencia suele pasar por alto — y lo que más cuesta en una emergencia real.</p>
+
+      <div class="card warn">
+        <h4>Señales de alerta — actúa de inmediato</h4>
+        <ul>
+          <li>Nivel de conciencia D o I en el método ADVI.</li>
+          <li>No respira, o respira boqueando / muy rápido / muy lento (técnica VOS alterada).</li>
+          <li>Hemorragia (X) que no se detiene con presión directa.</li>
+          <li>Piel pálida, fría y sudorosa (signo de shock).</li>
+          <li>Pupilas de tamaño desigual o que no reaccionan a la luz.</li>
+          <li>Dolor de pecho intenso, o dificultad para hablar / mover un lado del cuerpo.</li>
+          <li>Mecanismo de lesión grave (atrapamiento, caída de altura, choque eléctrico) aunque la persona "se vea bien".</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h4>Errores comunes al responder</h4>
+        <ul>
+          <li><b>Saltarse la 3S</b> y entrar a la escena sin verificar si la máquina está apagada / bloqueada (LOTO) o si hay riesgo eléctrico.</li>
+          <li><b>Olvidar la X</b> en un paciente de trauma: atender vía aérea antes de controlar una hemorragia severa evidente.</li>
+          <li><b>Mover a la víctima</b> "para que esté más cómoda" sin que haya peligro real.</li>
+          <li><b>Saltarse pasos del XABCDE</b> por apurarse a tratar la lesión más visible.</li>
+          <li><b>No pedir apoyo desde el inicio</b> — esperar a confirmar qué tan grave es antes de activar el protocolo.</li>
+          <li><b>No proteger el cuello</b> en mecanismos de lesión con impacto, aunque la persona esté consciente y hablando.</li>
+        </ul>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-xabcde')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-sim')">Siguiente → Simulador de casos</button>
+      </div>
+    </section>
+
+    <section id="sec-sim">
+      <p class="module-eyebrow">04 · Práctica</p>
+      <h2>Simulador de Casos</h2>
+      <p class="objective">Cuatro escenarios como los que pueden darse en planta. Cada opción tiene retroalimentación, sea correcta o no — el objetivo es que el criterio se quede, no memorizar la respuesta.</p>
+      <div class="scenario-select" id="scenarioSelect"></div>
+      <div id="scenarioStage"></div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-alertas')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-quiz')">Siguiente → Autoevaluación</button>
+      </div>
+    </section>
+
+    <section id="sec-quiz">
+      <p class="module-eyebrow">05 · Cierre</p>
+      <h2>Autoevaluación Final</h2>
+      <p class="objective">10 preguntas sobre la técnica de las 3S y la secuencia XABCDE. Semáforo: <span class="tag green">Verde ≥90%</span> <span class="tag">Amarillo 70–89%</span> <span class="tag red">Rojo &lt;70%</span></p>
+      <div id="quizContainer"></div>
+      <div class="btn-row"><button class="btn secondary" onclick="goTo('sec-sim')">← Atrás</button><button class="btn" id="quizSubmit" onclick="submitQuiz()">Calificar</button></div>
+      <div id="quizResult"></div>
+
+      <div class="card" id="registroCard" style="margin-top:20px;">
+        <h4>Registrar en la Matriz de Brigadas (hoja CAP_MENSUAL)</h4>
+        <p>Completa estos datos y genera una fila lista para pegar en tu Excel — empieza en la columna <b>NOMBRE BRIGADISTA</b>, en una fila nueva.</p>
+        <div class="grid2">
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Nombre completo</label>
+            <input id="regNombre" type="text" placeholder="Ej. Karen Solís Vargas" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Área</label>
+            <input id="regArea" list="areaList" type="text" placeholder="Ej. Inyección" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+            <datalist id="areaList">
+              <option value="Taller de Moldes"><option value="Ensamble"><option value="Administración">
+              <option value="Almacén"><option value="Mantenimiento"><option value="Calidad"><option value="Inyección">
+            </datalist>
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Grupo</label>
+            <input id="regGrupo" list="grupoList" type="text" placeholder="Ej. Grupo A" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+            <datalist id="grupoList">
+              <option value="Grupo A"><option value="Grupo B"><option value="Grupo C"><option value="Grupo D"><option value="Grupo Especial Dia">
+            </datalist>
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Instructor / Responsable</label>
+            <input id="regInstructor" type="text" value="Autoestudio (EVA)" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Práctica pendiente</label>
+            <select id="regPractica" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+              <option value="NO">NO</option>
+              <option value="SÍ">SÍ</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn secondary" onclick="generarResumen()">Generar fila para copiar</button></div>
+        <div id="resumenOutput" style="display:none; margin-top:14px;">
+          <textarea id="resumenText" readonly style="width:100%; min-height:60px; font-family:'IBM Plex Mono'; font-size:12px; padding:10px; border:1px solid var(--line); border-radius:8px; background:#fff;"></textarea>
+          <div class="btn-row" style="align-items:center;">
+            <button class="btn" onclick="copiarResumen()">📋 Copiar fila</button>
+            <span id="copyMsg" class="mono" style="font-size:12px; color:var(--green);"></span>
+          </div>
+          <p style="font-size:12.5px; color:var(--ink-soft); margin-top:6px;">Pega esta fila en <b>CAP_MENSUAL</b>, empezando en la columna <b>NOMBRE BRIGADISTA</b>.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="foot">ElectroPlast · Brigada de Emergencia — Complemento práctico del curso EVA</footer>
+
+<script>
+/* ---------------- NAV / STEPPER ---------------- */
+const sections = [
+  {id:'sec-intro', title:'Introducción'},
+  {id:'sec-3s', title:'01 · Técnica 3S'},
+  {id:'sec-xabcde', title:'02 · XABCDE'},
+  {id:'sec-alertas', title:'03 · Alertas'},
+  {id:'sec-sim', title:'04 · Simulador'},
+  {id:'sec-quiz', title:'05 · Evaluación'}
+];
+const visited = new Set(['sec-intro']);
+const stepper = document.getElementById('stepper');
+sections.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.className = 'step-item';
+  b.id = 'navbtn-'+s.id;
+  b.innerHTML = `<span class="step-num mono" id="num-${s.id}">${i+1}</span><span class="step-title">${s.title}</span>`;
+  b.onclick = ()=>goTo(s.id);
+  stepper.appendChild(b);
+});
+function updateProgress(){
+  const pct = Math.round((visited.size/sections.length)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = visited.size+' / '+sections.length+' secciones';
+}
+function goTo(id){
+  sections.forEach(s=>document.getElementById(s.id).classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  visited.add(id);
+  sections.forEach(s=>{
+    const b = document.getElementById('navbtn-'+s.id);
+    b.classList.toggle('active', s.id===id);
+    document.getElementById('num-'+s.id).classList.toggle('done', visited.has(s.id) && s.id!==id);
+  });
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+goTo('sec-intro');
+
+/* ---------------- 3S STEPS ---------------- */
+const steps = [
+  {n:'S', t:'Seguridad', d:'Verifica energía eléctrica, partes móviles de máquina, calor/resina fundida, químicos, piso resbaloso o gases antes de acercarte. Identifica todo lo que ponga en peligro al rescatador y al paciente.'},
+  {n:'e', t:'eScena', d:'Conoce cuántos elementos o áreas están involucrados y el grado de daño: ¿es solo una máquina, o hay riesgo para varias estaciones de trabajo cercanas?'},
+  {n:'S', t:'Situación', d:'Pregúntate: ¿qué ocurrió?, ¿cuál es el mecanismo de lesión (atrapamiento, quemadura, caída, choque eléctrico)?, ¿cuántas personas están involucradas?, ¿qué recursos se necesitan (brigada completa, LOTO, ambulancia, supervisor)?'}
+];
+const stepsContainer = document.getElementById('stepsContainer');
+steps.forEach((s,i)=>{
+  const div = document.createElement('div');
+  div.className = 'step';
+  div.id = 'step-'+i;
+  div.innerHTML = `
+    <div class="step-letter">${s.n}</div>
+    <div class="step-body">
+      <h4>${s.t}</h4>
+      <p>${s.d}</p>
+      <button class="step-check" onclick="toggleStep(${i})">Marcar como entendido</button>
+    </div>`;
+  stepsContainer.appendChild(div);
+});
+function toggleStep(i){
+  const el = document.getElementById('step-'+i);
+  el.classList.toggle('done');
+  const btn = el.querySelector('.step-check');
+  btn.textContent = el.classList.contains('done') ? '✓ Entendido' : 'Marcar como entendido';
+}
+
+/* ---------------- XABCDE control panel ---------------- */
+const abcde = [
+  {k:'X', label:'Hemorragias', x:true, title:'X — Control de Hemorragias Severas',
+   text:'Se atiende de inmediato, antes que cualquier otra letra, en un paciente de trauma. Presión directa sobre la herida; si no cede, empaquetamiento; si está capacitado y es necesario, torniquete. No se espera a terminar el resto de la revisión.'},
+  {k:'A', label:'Vía aérea', title:'A — Vía Aérea',
+   text:'Paciente médico: elevación de mentón. Paciente de trauma: tracción mandibular con inmovilización cervical, sin mover el cuello. Si la persona habla o llora, la vía aérea está abierta.'},
+  {k:'B', label:'Respiración', title:'B — Respiración (técnica VOS)',
+   text:'Ver el tórax subir y bajar. Oír la respiración. Sentir el aire salir. Diferencia entre "respira normal", "respira con dificultad / boqueando" y "no respira".'},
+  {k:'C', label:'Circulación', title:'C — Circulación',
+   text:'Verifica pulso carotídeo, llenado capilar y temperatura de la piel. Revisa signos de shock: piel pálida, fría, sudorosa, pulso rápido y débil. Controla cualquier hemorragia adicional.'},
+  {k:'D', label:'Neurológico', title:'D — Estado Neurológico',
+   text:'Nivel de conciencia con el método ADVI (Alerta, Verbal, Doloroso, Inconsciente). Revisa tamaño y reacción de las pupilas a la luz, y respuesta motora simple: "apriétame la mano".'},
+  {k:'E', label:'Exposición', title:'E — Exposición',
+   text:'Revisa el cuerpo completo cuidando el pudor de la persona, y luego cúbrela para conservar el calor y evitar hipotermia.'}
+];
+const controlPanel = document.getElementById('controlPanel');
+const abcdeDetail = document.getElementById('abcdeDetail');
+abcde.forEach((item,i)=>{
+  const lamp = document.createElement('div');
+  lamp.className = 'lamp' + (item.x ? ' x' : '');
+  lamp.id = 'lamp-'+i;
+  lamp.innerHTML = `<div class="bulb"></div><div class="letter">${item.k}</div><span class="label">${item.label}</span>`;
+  lamp.onclick = ()=>showAbcde(i);
+  controlPanel.appendChild(lamp);
+});
+function showAbcde(i){
+  document.getElementById('lamp-'+i).classList.add('on');
+  const item = abcde[i];
+  abcdeDetail.style.display = 'block';
+  abcdeDetail.innerHTML = `<h4>${item.title}</h4><p style="margin:0; font-size:14px; color:var(--ink-soft);">${item.text}</p>`;
+}
+
+/* ---------------- SIMULADOR ---------------- */
+const cases = [
+  {
+    id:'c1', tag:'Caso 1', title:'Quemadura con resina fundida',
+    situacion:'Un operador de la línea de inyección sufre una salpicadura de resina caliente en el antebrazo al abrir el molde. Está de pie, consciente, hablando, con dolor fuerte. La máquina sigue en ciclo.',
+    steps:[
+      {q:'¿Qué haces primero?',
+       options:[
+         {t:'Corro a poner agua en la quemadura de inmediato.', ok:false, fb:'Antes de tocar al colaborador se aplican las 3S: ¿la máquina sigue en movimiento?, ¿hay riesgo de otra salpicadura? Atender la lesión sin controlar la escena puede generar una segunda víctima.'},
+         {t:'Aplico la 3S: verifico que la máquina esté detenida / asegurada y que no haya riesgo de otra salpicadura antes de acercarme.', ok:true, fb:'Correcto. Seguridad de la escena siempre primero, incluso en una lesión que se ve "simple".'},
+         {t:'Le pido al operador que se aleje de la máquina por su cuenta mientras yo aviso a mantenimiento.', ok:false, fb:'Riesgoso: si el operador reacciona al dolor puede caer o golpearse. Acércate tú primero a evaluar antes de darle instrucciones de movimiento.'}
+       ]},
+      {q:'Escena segura, paciente médico (sin mecanismo de trauma). Habla, está consciente. ¿Qué haces?',
+       options:[
+         {t:'Aplico el XABCDE en orden A-B-C-D-E, ya que es un paciente médico sin trauma.', ok:true, fb:'Correcto. Que hable y esté consciente ya te da información de A y de D (Alerta en el ADVI), pero igual confirmas B y C antes de tratar la quemadura en sí.'},
+         {t:'Empiezo a enfriar la quemadura de inmediato con agua, ya que es lo más urgente.', ok:false, fb:'La quemadura duele mucho pero no amenaza la vida en este caso. Antes de tratarla, se confirma que no hay nada más grave en el XABCDE.'}
+       ]},
+      {q:'XABCDE estable, sin amenaza a la vida. ¿Qué decides?',
+       options:[
+         {t:'Alta prioridad: activo traslado inmediato sin más evaluación.', ok:false, fb:'No es necesariamente alta prioridad si la quemadura es de espesor parcial y el XABCDE está estable — pero sí requiere valoración médica. "Alta prioridad" se reserva para amenazas a la vida.'},
+         {t:'Continúo con revisión secundaria y SAMPLE: valoro tamaño/profundidad de la quemadura, la enfrío según protocolo y coordino traslado o atención según gravedad.', ok:true, fb:'Correcto. Con el XABCDE estable, pasas a la revisión secundaria — ahí aplicas las técnicas de quemaduras que ya viste en el curso base.'}
+       ]}
+    ]
+  },
+  {
+    id:'c2', tag:'Caso 2', title:'Atrapamiento de mano en prensa',
+    situacion:'Alarma de emergencia en el área de moldeo. Un colaborador tiene la mano atrapada entre las partes móviles de una prensa de inyección, con sangrado visible. Está consciente, con dolor intenso, pálido.',
+    steps:[
+      {q:'Llegas al lugar. ¿Qué confirmas primero con la 3S?',
+       options:[
+         {t:'Que la máquina esté detenida y bloqueada (LOTO) antes de que cualquiera intente liberar la mano.', ok:true, fb:'Correcto. Sin bloqueo confirmado, un movimiento accidental de la máquina puede agravar la lesión o atrapar a otro brigadista.'},
+         {t:'Empiezo a intentar liberar la mano manualmente mientras alguien más va a apagar la máquina.', ok:false, fb:'Riesgo alto: si la máquina se activa mientras manipulas la zona, la lesión puede empeorar gravemente. Se confirma el bloqueo antes de cualquier maniobra.'}
+       ]},
+      {q:'Máquina bloqueada. Es un paciente de trauma. ¿En qué orden aplicas el XABCDE?',
+       options:[
+         {t:'X primero: controlo la hemorragia visible con presión directa donde sea posible, luego A-B-C-D-E.', ok:true, fb:'Correcto. En trauma, la secuencia es X-A-B-C-D-E: la hemorragia severa se controla antes que cualquier otra letra, incluso antes de completar la liberación.'},
+         {t:'Empiezo por A (vía aérea), la sangre puede esperar un momento ya que está consciente y hablando.', ok:false, fb:'No. En un paciente de trauma con hemorragia visible, la X va primero — es la única letra que se atiende de inmediato, sin esperar los 10 segundos de las demás.'}
+       ]},
+      {q:'Detectas signos de shock (piel pálida, fría, sudorosa) y sangrado que no cede con presión directa. ¿Qué decides?',
+       options:[
+         {t:'Alta prioridad: activo protocolo de emergencia completo y traslado inmediato apenas se libere la mano de forma segura.', ok:true, fb:'Correcto. Shock + hemorragia no controlada = amenaza a la vida = alta prioridad. No se espera a la revisión secundaria.'},
+         {t:'Espero a que se calme antes de decidir si es grave.', ok:false, fb:'No se espera. Shock y sangrado no controlado son señales de alerta que exigen activar el protocolo de inmediato, no observar primero.'}
+       ]}
+    ]
+  },
+  {
+    id:'c3', tag:'Caso 3', title:'Posible choque eléctrico',
+    situacion:'Un técnico de mantenimiento cae al piso junto a un tablero eléctrico abierto. No se mueve. Un compañero grita pidiendo ayuda y está a punto de tocarlo para levantarlo.',
+    steps:[
+      {q:'¿Qué le dices al compañero de inmediato? (Seguridad de la 3S)',
+       options:[
+         {t:'"¡No lo toques! Puede seguir energizado, hay que cortar la corriente primero."', ok:true, fb:'Correcto. Ante sospecha de choque eléctrico, tocar a la víctima antes de cortar la energía puede convertir al rescatista en una segunda víctima.'},
+         {t:'"Tranquilo, ayúdame a moverlo lejos del tablero."', ok:false, fb:'Peligroso: si el circuito sigue activo, tocar a la persona puede electrocutar también al rescatista. Primero se corta o se confirma que la energía está cortada.'}
+       ]},
+      {q:'Energía cortada, te acercas. Es un paciente de trauma (caída con posible golpe). No responde a la voz ni al dolor (I en ADVI). ¿Qué haces?',
+       options:[
+         {t:'Reviso la X (no hay hemorragia visible) y sigo con A y B de inmediato: vía aérea con tracción mandibular e inmovilización cervical, y respiración con técnica VOS.', ok:true, fb:'Correcto. Sin hemorragia visible se avanza rápido a A y B — un choque eléctrico puede afectar el ritmo respiratorio o cardíaco, y el mecanismo de caída obliga a proteger el cuello.'},
+         {t:'Reviso primero si tiene quemaduras visibles por el choque eléctrico.', ok:false, fb:'Las quemaduras son parte de la revisión secundaria. Con una persona inconsciente tras un choque eléctrico, el riesgo inmediato está en la vía aérea y la respiración, no en las lesiones visibles.'}
+       ]},
+      {q:'No responde y su respiración es irregular. ¿Qué decides?',
+       options:[
+         {t:'Alta prioridad absoluta: activo el protocolo de emergencia completo de inmediato y me preparo para maniobras de reanimación según lo aprendido si la respiración se detiene.', ok:true, fb:'Correcto. Inconsciencia (I) + respiración irregular tras choque eléctrico es una de las combinaciones más graves que puede enfrentar la brigada — se activa todo el protocolo sin demora.'},
+         {t:'Espero unos minutos a ver si reacciona antes de activar el protocolo completo.', ok:false, fb:'No se espera. Ante inconsciencia con respiración irregular, se activa el protocolo de inmediato — cada segundo cuenta.'}
+       ]}
+    ]
+  },
+  {
+    id:'c4', tag:'Caso 4', title:'Colapso en bodega',
+    situacion:'Un colaborador de bodega se desploma de repente mientras acomoda material. No hay máquinas cerca, no hubo golpe visible. Al llegar, está en el piso, algo confundido.',
+    steps:[
+      {q:'Escena sin peligros evidentes (paciente médico, sin trauma). ¿Qué haces primero?',
+       options:[
+         {t:'Formo una impresión general y evalúo su nivel de conciencia con ADVI.', ok:true, fb:'Correcto. Sin peligros en la escena, el siguiente paso inmediato es la impresión general y el ADVI — eso orienta el resto del XABCDE.'},
+         {t:'Lo siento y le doy agua de inmediato, parece que solo se mareó.', ok:false, fb:'No se asume la causa antes de evaluar. "Parece que se mareó" puede ocultar algo más serio. Se hace el XABCDE primero.'}
+       ]},
+      {q:'Responde a la voz pero está confundido (nivel "V" en ADVI), respira normal (VOS sin alteración), tiene pulso presente pero está sudando frío. ¿Qué haces?',
+       options:[
+         {t:'Continúo el ABCDE completo (C, D, E) y mantengo vigilancia constante mientras se activa apoyo.', ok:true, fb:'Correcto. Un nivel de conciencia alterado (V, no A) ya es señal de alerta — se completa el ABCDE y se pide apoyo mientras se vigila, sin dejar sola a la persona.'},
+         {t:'Como respira y tiene pulso, considero que está bien y lo dejo sentado mientras sigo con mis tareas.', ok:false, fb:'No. Un nivel de conciencia alterado (responde solo a la voz, está confundido) es señal de alerta por sí solo, aunque respire y tenga pulso.'}
+       ]},
+      {q:'Se mantiene confundido, sudoroso. ¿Qué decides?',
+       options:[
+         {t:'Alta prioridad: activo protocolo de emergencia y traslado, aunque no haya un mecanismo de lesión visible.', ok:true, fb:'Correcto. Un nivel de conciencia alterado sin causa clara es señal de alerta suficiente para activar protocolo completo — no hace falta un golpe o herida visible para que sea grave.'},
+         {t:'Espero a ver si se recupera solo en los próximos minutos antes de avisar a nadie.', ok:false, fb:'No. Confusión + sudoración fría son señales de alerta que requieren activar el protocolo ya, no observar en silencio.'}
+       ]}
+    ]
+  }
+];
+
+const scenarioSelect = document.getElementById('scenarioSelect');
+const scenarioStage = document.getElementById('scenarioStage');
+const caseState = {};
+cases.forEach(c=>{
+  caseState[c.id] = {stepIndex:0, done:false};
+  const b = document.createElement('button');
+  b.className = 'scenario-btn';
+  b.id = 'scbtn-'+c.id;
+  b.innerHTML = `<span class="sc-tag">${c.tag}</span>${c.title}`;
+  b.onclick = ()=>loadCase(c.id);
+  scenarioSelect.appendChild(b);
+});
+
+function loadCase(id){
+  const c = cases.find(x=>x.id===id);
+  caseState[id].stepIndex = 0;
+  renderCaseStep(c);
+}
+
+function renderCaseStep(c){
+  const state = caseState[c.id];
+  const stepData = c.steps[state.stepIndex];
+  const box = document.createElement('div');
+  box.className = 'scene-box';
+  let html = '';
+  if(state.stepIndex === 0){
+    html += `<div class="situacion"><b style="color:var(--ink)">Situación:</b> ${c.situacion}</div>`;
+  }
+  html += `<p style="color:var(--ink); font-weight:600; margin-bottom:12px;">${stepData.q}</p>`;
+  html += `<div id="opts-${c.id}-${state.stepIndex}"></div>`;
+  html += `<div id="fb-${c.id}-${state.stepIndex}"></div>`;
+  html += `<div class="btn-row" id="nextbtn-${c.id}-${state.stepIndex}"></div>`;
+  scenarioStage.innerHTML = '';
+  scenarioStage.appendChild(box);
+  box.innerHTML = html;
+
+  const optsWrap = document.getElementById(`opts-${c.id}-${state.stepIndex}`);
+  stepData.options.forEach((opt)=>{
+    const ob = document.createElement('button');
+    ob.className = 'option-btn';
+    ob.textContent = opt.t;
+    ob.onclick = ()=>{
+      Array.from(optsWrap.children).forEach(ch=>ch.disabled = true);
+      ob.classList.add(opt.ok ? 'correct' : 'incorrect');
+      const fb = document.getElementById(`fb-${c.id}-${state.stepIndex}`);
+      fb.innerHTML = `<div class="feedback ${opt.ok?'ok':'bad'}"><b>${opt.ok?'Correcto.':'Para revisar:'}</b> ${opt.fb}</div>`;
+      const nextWrap = document.getElementById(`nextbtn-${c.id}-${state.stepIndex}`);
+      if(state.stepIndex < c.steps.length - 1){
+        const nb = document.createElement('button');
+        nb.className = 'btn';
+        nb.textContent = 'Siguiente decisión →';
+        nb.onclick = ()=>{ state.stepIndex++; renderCaseStep(c); };
+        nextWrap.appendChild(nb);
+      } else {
+        state.done = true;
+        document.getElementById('scbtn-'+c.id).classList.add('done');
+        const doneMsg = document.createElement('div');
+        doneMsg.className = 'card';
+        doneMsg.style.marginTop = '14px';
+        doneMsg.innerHTML = '<b style="color:var(--green)">Caso completado.</b> Elige otro escenario arriba, o continúa a la autoevaluación.';
+        nextWrap.appendChild(doneMsg);
+      }
+    };
+    optsWrap.appendChild(ob);
+  });
+}
+
+/* ---------------- QUIZ ---------------- */
+let lastQuizPct = null;
+const quiz = [
+  {q:'¿Cuál es el primer paso en cualquier emergencia, antes de acercarte a la víctima?', a:['Aplicar la técnica de primeros auxilios correspondiente','Aplicar la técnica de las 3S','Preguntar el nombre de la víctima','Llamar a la familia'], c:1},
+  {q:'La letra "Situación" de la técnica 3S busca responder principalmente:', a:['Cuál es el color de la máquina','Qué ocurrió, el mecanismo de lesión y qué recursos se necesitan','Quién tiene la razón del accidente','Cuánto cuesta la reparación'], c:1},
+  {q:'Un colaborador quedó atrapado por una máquina que sigue energizada. ¿Qué haces primero?', a:['Intento liberarlo de inmediato','Verifico y aseguro que la máquina esté bloqueada (LOTO) antes de acercarme','Le pido que se calme','Reviso su respiración desde lejos'], c:1},
+  {q:'¿Cuándo se justifica mover a una víctima antes de revisarla?', a:['Siempre, para que esté más cómoda','Nunca, bajo ninguna circunstancia','Solo si hay peligro inminente que no se puede controlar de otra forma','Solo si lo pide la víctima'], c:2},
+  {q:'El método ADVI se usa para evaluar:', a:['El tipo de hemorragia','El nivel de conciencia','La temperatura corporal','La gravedad de una quemadura'], c:1},
+  {q:'En un paciente de trauma, la secuencia XABCDE inicia con:', a:['A de vía aérea','X de control de hemorragias severas','C de circulación','D de estado neurológico'], c:1},
+  {q:'La técnica VOS se utiliza para evaluar:', a:['El pulso','La respiración','El estado de conciencia','La temperatura'], c:1},
+  {q:'Piel pálida, fría y sudorosa son señales de:', a:['Shock','Buena circulación','Fiebre','Relajación'], c:0},
+  {q:'Si al final del XABCDE identificas una amenaza a la vida, ¿qué haces?', a:['Continúo con la revisión secundaria antes de decidir','Activo alta prioridad y protocolo de emergencia de inmediato','Espero unos minutos para confirmar','Solo lo anoto para el reporte'], c:1},
+  {q:'¿Cuál de estos es un error común al responder a una emergencia?', a:['Verificar la seguridad de la escena primero','Pedir apoyo desde el inicio','Olvidar la X y atender vía aérea antes de controlar una hemorragia severa evidente','Proteger el cuello ante un mecanismo de lesión importante'], c:2},
+];
+const quizContainer = document.getElementById('quizContainer');
+quiz.forEach((item,qi)=>{
+  const div = document.createElement('div');
+  div.className = 'quiz-q';
+  let optsHtml = '';
+  item.a.forEach((opt,oi)=>{
+    optsHtml += `<label class="q-opt"><input type="radio" name="q${qi}" value="${oi}"> <span>${opt}</span></label>`;
+  });
+  div.innerHTML = `<p class="q-text">${qi+1}. ${item.q}</p>${optsHtml}`;
+  quizContainer.appendChild(div);
+});
+function submitQuiz(){
+  let correct = 0;
+  quiz.forEach((item,qi)=>{
+    const sel = document.querySelector(`input[name="q${qi}"]:checked`);
+    if(sel && parseInt(sel.value) === item.c) correct++;
+  });
+  const pct = Math.round((correct/quiz.length)*100);
+  let color, label;
+  if(pct >= 90){color='green'; label='VERDE — Dominado';}
+  else if(pct >= 70){color='amber'; label='AMARILLO — Repasar puntos débiles';}
+  else {color='red'; label='ROJO — Requiere repaso del módulo';}
+  const bg = color==='green' ? 'var(--green-bg)' : color==='amber' ? 'var(--amber-bg)' : 'var(--red-bg)';
+  const fg = color==='green' ? 'var(--green)' : color==='amber' ? '#8A5E10' : 'var(--red)';
+  const resultDiv = document.getElementById('quizResult');
+  resultDiv.innerHTML = `
+    <div class="quiz-result" style="background:${bg}; border:1px solid var(--line);">
+      <p class="score mono" style="color:${fg};">${pct}%</p>
+      <p style="margin:2px 0 0; color:var(--ink-soft);">${correct} de ${quiz.length} correctas</p>
+      <span class="semaforo tag ${color}">${label}</span>
+    </div>`;
+  resultDiv.scrollIntoView({behavior:'smooth', block:'center'});
+  lastQuizPct = pct;
+}
+
+function generarResumen(){
+  const nombre = document.getElementById('regNombre').value.trim();
+  if(!nombre){ alert('Escribe el nombre completo del brigadista.'); return; }
+  if(lastQuizPct === null){ alert('Primero presiona "Calificar" en la autoevaluación de arriba.'); return; }
+  const area = document.getElementById('regArea').value.trim();
+  const grupo = document.getElementById('regGrupo').value.trim();
+  const instructor = document.getElementById('regInstructor').value.trim();
+  const practica = document.getElementById('regPractica').value;
+  const fecha = new Date().toISOString().slice(0,10);
+  const tipo = 'Escena y Abordaje del Paciente (Simulador)';
+  const modalidad = 'Video Autoestudio';
+  const asistencia = '1';
+  const resultado = lastQuizPct >= 80 ? 'APROBADO' : 'REPROBADO';
+  const obs = 'Completado en módulo digital autoevaluado (EVA) el ' + fecha;
+  const row = [nombre, area, grupo, tipo, fecha, modalidad, instructor, asistencia, lastQuizPct, resultado, practica, obs].join('\t');
+  document.getElementById('resumenText').value = row;
+  document.getElementById('resumenOutput').style.display = 'block';
+  document.getElementById('resumenOutput').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function copiarResumen(){
+  const el = document.getElementById('resumenText');
+  el.focus(); el.select(); el.setSelectionRange(0, 99999);
+  const msg = document.getElementById('copyMsg');
+  try{
+    document.execCommand('copy');
+    msg.textContent = '✓ Copiado — pégalo en CAP_MENSUAL';
+  }catch(e){
+    msg.textContent = 'Selecciona el texto y usa Ctrl+C';
+  }
+  setTimeout(()=>{ msg.textContent=''; }, 4000);
+}
+</script>
+</body>
+</html>
