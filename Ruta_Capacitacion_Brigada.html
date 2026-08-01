@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruta de Capacitación · Brigada ElectroPlast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6F5; --paper:#FFFFFF; --ink:#1C2522; --ink-soft:#54615C; --line:#DDE3E0;
+    --blue:#1B4B66; --blue-deep:#123244; --red:#B93A2E; --amber:#D99A2E;
+    --green:#2E8B57; --green-bg:#E8F4EC; --amber-bg:#FBF1DD; --red-bg:#F8E7E4; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Source Sans 3', sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3,.display{font-family:'Barlow Condensed', sans-serif; font-weight:800; letter-spacing:0.01em; text-transform:uppercase; color:var(--blue-deep);}
+  .mono{font-family:'IBM Plex Mono', monospace; letter-spacing:0.02em;}
+
+  header.top{background:var(--blue-deep); color:#fff; padding:32px 20px 26px; position:relative; overflow:hidden;}
+  .top-inner{max-width:900px; margin:0 auto; position:relative; z-index:2;}
+  .brand-eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#8FB4C6; margin:0 0 6px 0;}
+  header.top h1{color:#fff; font-size:clamp(28px,5vw,42px); margin:0; line-height:1;}
+  header.top .sub{color:#C7D9E1; font-size:15px; margin-top:10px; max-width:560px;}
+  .ekg-wrap{height:40px; margin-top:18px; max-width:900px; margin-left:auto; margin-right:auto; position:relative; z-index:2;}
+  .ekg-wrap svg{width:100%;height:100%;display:block;}
+  .ekg-line{fill:none; stroke:#4FA3C4; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:900; stroke-dashoffset:900; animation:draw 4.5s linear infinite;}
+  @keyframes draw{0%{stroke-dashoffset:900;} 60%{stroke-dashoffset:0;} 100%{stroke-dashoffset:-900;}}
+
+  main{max-width:900px; margin:0 auto; padding:34px 20px 70px;}
+  .route-line{position:relative; padding-left:34px;}
+  .route-line::before{content:''; position:absolute; left:12px; top:14px; bottom:14px; width:2px; background:var(--line);}
+
+  .route-card{position:relative; margin-bottom:22px;}
+  .route-dot{position:absolute; left:-34px; top:22px; width:26px; height:26px; border-radius:50%; background:var(--paper); border:2px solid var(--blue); color:var(--blue); font-family:'IBM Plex Mono'; font-weight:600; font-size:12px; display:flex; align-items:center; justify-content:center;}
+  .card-box{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; display:flex; justify-content:space-between; gap:18px; align-items:center; flex-wrap:wrap; transition:border-color .15s;}
+  .card-box:hover{border-color:var(--blue);}
+  .card-eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--blue); text-transform:uppercase; letter-spacing:0.12em; margin:0 0 4px;}
+  .card-box h2{font-size:22px; margin:0 0 6px; color:var(--blue-deep);}
+  .card-box p{color:var(--ink-soft); font-size:14px; margin:0; max-width:480px;}
+  .card-meta{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; padding:2px 8px; border-radius:20px; background:var(--amber-bg); color:#8A5E10;}
+  .tag.green{background:var(--green-bg); color:var(--green);}
+  .btn{font-family:'Barlow Condensed',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; font-size:14.5px; padding:11px 22px; border-radius:8px; border:none; background:var(--blue); color:#fff; cursor:pointer; text-decoration:none; display:inline-block; white-space:nowrap; transition:background .15s;}
+  .btn:hover{background:var(--blue-deep);}
+  .btn.secondary{background:transparent; color:var(--blue); border:1.5px solid var(--blue);}
+  .btn.secondary:hover{background:#EAF1F4;}
+
+  .note{background:#EAF1F4; border-left:3px solid var(--blue); border-radius:0 10px 10px 0; padding:16px 20px; margin-top:8px; font-size:13.5px; color:var(--ink-soft);}
+  .note b{color:var(--ink);}
+
+  footer.foot{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:20px; font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <p class="brand-eyebrow">EVA · Entorno Virtual de Aprendizaje</p>
+    <h1>Ruta de Capacitación<br>de Brigada</h1>
+    <p class="sub">Dos capacitaciones independientes — cada una se puede abrir, compartir o completar por su cuenta. Aquí están en el orden recomendado.</p>
+  </div>
+  <div class="ekg-wrap">
+    <svg viewBox="0 0 600 40" preserveAspectRatio="none">
+      <path class="ekg-line" d="M0,20 L60,20 L75,20 L85,4 L95,36 L105,12 L115,20 L180,20 L195,20 L205,8 L215,30 L225,16 L235,20 L300,20 L315,20 L325,4 L335,36 L345,12 L355,20 L420,20 L435,20 L445,8 L455,30 L465,16 L475,20 L540,20 L555,20 L565,4 L575,36 L585,12 L600,20"/>
+    </svg>
+  </div>
+</header>
+
+<main>
+  <div class="route-line">
+
+    <div class="route-card">
+      <div class="route-dot">1</div>
+      <div class="card-box">
+        <div>
+          <p class="card-eyebrow">Curso base · 7 módulos</p>
+          <h2>Primeros Auxilios Básicos</h2>
+          <p>El primer respondedor, evaluación de la escena, abordaje del paciente, RCP básico, emergencias médicas y de trauma, habilidades y destrezas. Incluye examen final y certificado.</p>
+          <div class="card-meta"><span class="tag">Teórico</span><span class="tag">Examen + certificado</span></div>
+        </div>
+        <a class="btn" href="Capacitacion_EVA_Primeros_Auxilios_Basicos.html">Abrir curso →</a>
+      </div>
+    </div>
+
+    <div class="route-card">
+      <div class="route-dot">2</div>
+      <div class="card-box">
+        <div>
+          <p class="card-eyebrow">Complemento práctico · Módulos 2–3</p>
+          <h2>Escena y Abordaje del Paciente</h2>
+          <p>Profundiza la técnica de las 3S y la secuencia XABCDE del curso base, con un panel interactivo por letra y un simulador de 4 casos de planta de inyección con retroalimentación.</p>
+          <div class="card-meta"><span class="tag">Práctico</span><span class="tag">Simulador de casos</span><span class="tag green">Autoevaluación</span></div>
+        </div>
+        <a class="btn" href="Modulo_Evaluacion_Escena_Revision_Primaria.html">Abrir módulo →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <b>Recomendación de uso:</b> completa primero el curso base (1), y usa el módulo complementario (2) como repaso y práctica antes de una evaluación en vivo o un simulacro. No dependen técnicamente uno del otro — se pueden abrir en cualquier orden o por separado.
+  </div>
+
+  <div class="note" style="margin-top:14px; background:var(--amber-bg); border-left-color:var(--amber);">
+    <b>Para que los enlaces funcionen:</b> guarda este archivo y los dos anteriores (<span class="mono">Capacitacion_EVA_Primeros_Auxilios_Basicos.html</span> y <span class="mono">Modulo_Evaluacion_Escena_Revision_Primaria.html</span>) en la misma carpeta antes de abrirlos.
+  </div>
+</main>
+
+<footer class="foot">ElectroPlast · Brigada de Emergencia — Ruta de Capacitación</footer>
+
+</body>
+</html>
