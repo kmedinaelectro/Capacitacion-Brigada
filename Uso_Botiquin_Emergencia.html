@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVA · Uso del Botiquín de Emergencia · Brigada ElectroPlast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6F5; --paper:#FFFFFF; --ink:#1C2522; --ink-soft:#54615C; --line:#DDE3E0;
+    --blue:#1B4B66; --blue-deep:#123244; --red:#B93A2E; --amber:#D99A2E;
+    --green:#2E8B57; --green-bg:#E8F4EC; --amber-bg:#FBF1DD; --red-bg:#F8E7E4; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Source Sans 3', sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3,.display{font-family:'Barlow Condensed', sans-serif; font-weight:800; letter-spacing:0.01em; text-transform:uppercase; color:var(--blue-deep);}
+  .mono{font-family:'IBM Plex Mono', monospace; letter-spacing:0.02em;}
+
+  header.top{background:var(--blue-deep); color:#fff; padding:22px 20px 0 20px; position:relative; overflow:hidden;}
+  .top-inner{max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; position:relative; z-index:2;}
+  .brand-eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#8FB4C6; margin:0 0 4px 0;}
+  header.top h1{color:#fff; font-size:clamp(24px,4.4vw,38px); margin:0; line-height:0.98;}
+  header.top .sub{color:#C7D9E1; font-size:15px; margin-top:6px; max-width:580px;}
+  .back-link{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#8FB4C6; text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-bottom:10px;}
+  .back-link:hover{color:#fff;}
+  .progress-shell{max-width:1100px; margin:16px auto 0 auto; padding:0 20px 18px 20px; position:relative; z-index:2;}
+  .progress-row{display:flex; align-items:center; gap:12px;}
+  .progress-track{flex:1; height:8px; background:rgba(255,255,255,0.15); border-radius:6px; overflow:hidden;}
+  .progress-fill{height:100%; background:linear-gradient(90deg,#4FA3C4,#7FD1A3); border-radius:6px; transition:width .4s ease; width:0%;}
+  .progress-label{font-family:'IBM Plex Mono',monospace; font-size:12px; color:#C7D9E1; white-space:nowrap;}
+
+  .wrap{max-width:1100px; margin:0 auto; padding:24px 20px 80px 20px; display:grid; grid-template-columns:250px 1fr; gap:24px; align-items:start;}
+  @media(max-width:840px){.wrap{grid-template-columns:1fr; padding-top:16px;}}
+
+  nav.stepper{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:10px; position:sticky; top:16px;}
+  @media(max-width:840px){nav.stepper{position:static; display:flex; overflow-x:auto; gap:6px; padding:10px 6px;}}
+  .step-item{display:flex; align-items:center; gap:10px; width:100%; padding:10px 10px; border-radius:10px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:'Source Sans 3',sans-serif; font-size:12.5px; color:var(--ink); transition:background .15s ease;}
+  @media(max-width:840px){.step-item{flex-direction:column; align-items:center; min-width:82px; text-align:center; font-size:10.5px; gap:4px;}}
+  .step-item:hover{background:#F0F3F2;}
+  .step-item.active{background:var(--blue); color:#fff;}
+  .step-item.active .step-num{background:#fff; color:var(--blue);}
+  .step-num{flex:none; width:26px;height:26px; border-radius:50%; background:#E4E9E7; color:var(--ink-soft); display:flex;align-items:center;justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px;font-weight:600;}
+  .step-num.done{background:var(--green); color:#fff;}
+  .step-item.active .step-num.done{background:#fff; color:var(--green);}
+  .step-title{flex:1; line-height:1.15;}
+
+  main.panel{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(20px,4vw,36px); min-height:400px;}
+  section{display:none;}
+  section.active{display:block; animation:fade .3s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .module-eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--blue); text-transform:uppercase; letter-spacing:0.14em; margin:0 0 4px 0;}
+  main.panel h2{font-size:clamp(22px,3.4vw,30px); margin:0 0 6px 0; color:var(--blue-deep);}
+  .objective{color:var(--ink-soft); font-size:15px; max-width:700px; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);}
+
+  .card{border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:14px; background:#FBFCFC;}
+  .card.warn{border-color:#E9C1BA; background:var(--red-bg);}
+  .card.ok{border-color:#BFE1CC; background:var(--green-bg);}
+  .card.gold{border-color:#EFD9A6; background:var(--amber-bg);}
+  .card h3,.card h4{font-size:16.5px; margin:0 0 8px 0; color:var(--blue); display:flex; align-items:center; gap:8px; text-transform:none; font-family:'Source Sans 3'; font-weight:700; letter-spacing:0;}
+  .card ul{margin:6px 0 0 0; padding-left:20px;}
+  .card li{margin-bottom:5px; line-height:1.45; font-size:14px;}
+  .card p{line-height:1.5; font-size:14px; margin:6px 0;}
+  .tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; padding:2px 8px; border-radius:20px; background:var(--amber-bg); color:#8A5E10; margin-right:6px;}
+  .tag.red{background:var(--red-bg); color:var(--red);}
+  .tag.green{background:var(--green-bg); color:var(--green);}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;}
+  @media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr;}}
+
+  .btn{font-family:'Barlow Condensed',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; font-size:15px; padding:11px 22px; border-radius:8px; border:none; background:var(--blue); color:#fff; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .btn:hover{background:var(--blue-deep);}
+  .btn:disabled{background:#B9C2BF; cursor:not-allowed;}
+  .btn.secondary{background:transparent; color:var(--blue); border:1.5px solid var(--blue);}
+  .btn.secondary:hover{background:#EAF1F4;}
+  .btn-row{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; justify-content:space-between;}
+
+  .mini-table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13.5px;}
+  .mini-table th, .mini-table td{border:1px solid var(--line); padding:9px 10px; text-align:left; vertical-align:top;}
+  .mini-table th{background:#EEF2F1; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase;}
+  .mini-table td.label{font-weight:700; background:#FBFCFC; width:190px;}
+
+  .quiz-q{margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--line);}
+  .quiz-q:last-child{border:none;}
+  .quiz-q p.q-text{color:var(--ink); font-weight:600; margin:0 0 9px; font-size:14.5px;}
+  .q-opt{display:flex; align-items:flex-start; gap:8px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:14px; color:var(--ink-soft);}
+  .q-opt:hover{background:#F0F3F2;}
+  .q-opt input{margin-top:3px;}
+  .quiz-result{text-align:center; padding:26px 20px; border-radius:12px; margin-top:10px;}
+  .quiz-result .score{font-family:'Barlow Condensed'; font-weight:800; font-size:46px; margin:0;}
+  .semaforo{display:inline-block; font-family:'IBM Plex Mono'; font-size:12px; padding:4px 12px; border-radius:20px; margin-top:6px;}
+
+  footer.foot{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:20px; font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div>
+      <a class="back-link" href="Ruta_Capacitacion_Brigada.html">← Ruta de capacitación</a>
+      <p class="brand-eyebrow">EVA · Equipo de Brigada</p>
+      <h1>Uso del Botiquín<br>de Emergencia</h1>
+      <p class="sub">Qué es y para qué sirve cada artículo del botiquín — desde una curita hasta el oxímetro y el glucómetro.</p>
+    </div>
+  </div>
+  <div class="progress-shell">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 8 secciones</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="stepper" id="stepper"></nav>
+  <main class="panel" id="panelWrap">
+
+    <section id="sec-intro">
+      <p class="module-eyebrow">Introducción</p>
+      <h2>Conoce tu Botiquín</h2>
+      <p class="objective">Un botiquín completo no sirve de nada si el brigadista no sabe para qué es cada cosa, o la usa mal. Este módulo cubre los 22 artículos de tu botiquín, organizados en 5 categorías.</p>
+      <div class="grid2">
+        <div class="card"><h4><span class="tag">01</span>Bioseguridad</h4><p>Guantes, bolsas infecciosas, alcohol gel.</p></div>
+        <div class="card"><h4><span class="tag">02</span>Limpieza y Curación</h4><p>Jabón, gasas, vendas, curitas, esparadrapo, suero fisiológico.</p></div>
+        <div class="card"><h4><span class="tag">03</span>Inmovilización y Trauma</h4><p>Pañuelos, férulas, collarín, inmovilizador de cabeza, cinturón araña, tijeras.</p></div>
+        <div class="card"><h4><span class="tag">04</span>Frío y Calor</h4><p>Bolsa térmica.</p></div>
+      </div>
+      <div class="card" style="margin-top:-2px;"><h4><span class="tag">05</span>Equipos de Diagnóstico</h4><p>Oxímetro, termómetro, glucómetro, foco pupilar, esfigmomanómetro.</p></div>
+      <div class="btn-row"><span></span><button class="btn" onclick="goTo('sec-bioseguridad')">Empezar → Bioseguridad</button></div>
+    </section>
+
+    <section id="sec-bioseguridad">
+      <p class="module-eyebrow">01 · Protección personal</p>
+      <h2>Bioseguridad</h2>
+      <p class="objective">Antes de tocar a cualquier persona lesionada, el brigadista se protege primero.</p>
+      <div class="card">
+        <h4>Guantes desechables</h4>
+        <p>Colócatelos antes de cualquier contacto con sangre o fluidos corporales. Cámbialos entre personas distintas, o si se rompen o contaminan. Nunca se reutilizan.</p>
+      </div>
+      <div class="card">
+        <h4>Bolsas infecciosas</h4>
+        <p>Para desechar todo material contaminado con sangre o fluidos: guantes usados, gasas con sangre, etc. Nunca se mezclan con la basura común.</p>
+      </div>
+      <div class="card">
+        <h4>Alcohol gel</h4>
+        <p>Para higienizar las manos cuando no hay agua y jabón disponibles — antes y después de atender a la persona.</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-intro')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-curacion')">Siguiente → Limpieza y Curación</button>
+      </div>
+    </section>
+
+    <section id="sec-curacion">
+      <p class="module-eyebrow">02 · Manejo de heridas</p>
+      <h2>Limpieza y Curación de Heridas</h2>
+      <p class="objective">El orden importa: primero se limpia, luego se cubre, luego se fija.</p>
+      <div class="grid2">
+        <div class="card"><h4>Jabón antibacterial</h4><p>Para lavado de manos del brigadista y limpieza inicial de heridas superficiales con agua corriente.</p></div>
+        <div class="card"><h4>Suero fisiológico</h4><p>Para irrigar y limpiar heridas, o los ojos ante salpicaduras — de forma segura y sin causar ardor.</p></div>
+        <div class="card"><h4>Gasas cuadro 4x4</h4><p>Para limpiar la herida y cubrir heridas pequeñas o medianas. Una gasa usada nunca se reutiliza.</p></div>
+        <div class="card"><h4>Gasas rollo 6x10 / 3x10</h4><p>Para envolver y fijar sobre heridas más grandes, o como vendaje de sostén.</p></div>
+        <div class="card"><h4>Almohadilla de alcohol</h4><p>Para desinfectar la piel antes de un procedimiento (ej. antes de usar el glucómetro). No se usa directamente sobre una herida abierta.</p></div>
+        <div class="card"><h4>Vendas adhesivas</h4><p>Para fijar gasas y apósitos sobre la piel.</p></div>
+        <div class="card"><h4>Curitas (caja)</h4><p>Para heridas pequeñas y superficiales.</p></div>
+        <div class="card"><h4>Esparadrapo</h4><p>Cinta adhesiva para fijar gasas, vendajes o dispositivos médicos a la piel.</p></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-bioseguridad')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-inmovilizacion')">Siguiente → Inmovilización y Trauma</button>
+      </div>
+    </section>
+
+    <section id="sec-inmovilizacion">
+      <p class="module-eyebrow">03 · Sospecha de fractura o trauma</p>
+      <h2>Inmovilización y Control de Trauma</h2>
+      <p class="objective">Este equipo se usa cuando hay sospecha de fractura, o de lesión de columna o cuello — la prioridad es no mover a la persona más de lo necesario.</p>
+      <div class="grid2">
+        <div class="card"><h4>Pañuelos triangulares</h4><p>Para inmovilizar un brazo (cabestrillo), fijar una férula, o improvisar un vendaje de compresión.</p></div>
+        <div class="card"><h4>Férulas rígidas</h4><p>Para inmovilizar sospecha de fractura en extremidades, evitando el movimiento del área afectada.</p></div>
+        <div class="card"><h4>Férulas largas de espalda</h4><p>Para inmovilizar sospecha de lesión de columna durante el traslado de la persona.</p></div>
+        <div class="card"><h4>Inmovilizador de cuello (collarín)</h4><p>Previene el movimiento de la columna cervical ante sospecha de trauma de cuello.</p></div>
+        <div class="card"><h4>Inmovilizador de cabeza</h4><p>Se usa junto con la férula larga de espalda para fijar completamente la cabeza y evitar movimiento durante el traslado.</p></div>
+        <div class="card"><h4>Cinturón araña</h4><p>Sistema de correas para asegurar a la persona a la férula larga de espalda durante el traslado.</p></div>
+      </div>
+      <div class="card gold">
+        <h4>Tijeras de punta redonda</h4>
+        <p>Para cortar ropa y exponer una herida o lesión sin riesgo de cortar a la persona — la punta roma evita lesionar la piel al cortar.</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-curacion')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-friocalor')">Siguiente → Frío y Calor</button>
+      </div>
+    </section>
+
+    <section id="sec-friocalor">
+      <p class="module-eyebrow">04 · Terapia física</p>
+      <h2>Frío y Calor</h2>
+      <p class="objective">Un solo artículo, pero con reglas de uso que se pasan por alto fácilmente.</p>
+      <div class="card warn">
+        <h4>Bolsa térmica</h4>
+        <p>Se usa para aplicar frío o calor controlado sobre una zona lesionada.</p>
+        <ul>
+          <li>Nunca en contacto directo con la piel — siempre envuelta en una tela o paño.</li>
+          <li>Máximo 15–20 minutos por aplicación, para evitar quemaduras o daño en el tejido.</li>
+          <li>No se aplica sobre heridas abiertas.</li>
+        </ul>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-inmovilizacion')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-diagnostico1')">Siguiente → Oxímetro y Termómetro</button>
+      </div>
+    </section>
+
+    <section id="sec-diagnostico1">
+      <p class="module-eyebrow">05 · Equipos de diagnóstico</p>
+      <h2>Oxímetro y Termómetro</h2>
+      <p class="objective">Estos dos equipos dan una lectura numérica — la responsabilidad del brigadista es medir bien e informar, no diagnosticar.</p>
+      <div class="card">
+        <h4>Oxímetro (pulsioxímetro)</h4>
+        <p>Mide la saturación de oxígeno en sangre (SpO2) y la frecuencia de pulso. Se coloca en la punta de un dedo, con la persona quieta y sin esmalte de uñas oscuro (puede interferir con la lectura).</p>
+        <table class="mini-table">
+          <tr><th>Lectura SpO2</th><th>Interpretación</th></tr>
+          <tr><td class="label">95% – 100%</td><td>Rango normal.</td></tr>
+          <tr><td class="label">91% – 94%</td><td>Señal de alerta — repetir la medición y vigilar a la persona.</td></tr>
+          <tr><td class="label">90% o menos</td><td>Urgencia — notificar de inmediato y referir a servicio médico.</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h4>Termómetro</h4>
+        <p>Mide la temperatura corporal. Sigue las instrucciones del modelo específico (axilar, oral o infrarrojo de frente/oído).</p>
+        <table class="mini-table">
+          <tr><th>Temperatura</th><th>Interpretación</th></tr>
+          <tr><td class="label">36°C – 37.2°C</td><td>Rango normal.</td></tr>
+          <tr><td class="label">37.3°C – 37.9°C</td><td>Febrícula — vigilar.</td></tr>
+          <tr><td class="label">38°C o más</td><td>Fiebre — notificar y referir según protocolo.</td></tr>
+        </table>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-friocalor')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-diagnostico2')">Siguiente → Glucómetro y Foco Pupilar</button>
+      </div>
+    </section>
+
+    <section id="sec-diagnostico2">
+      <p class="module-eyebrow">05 · Equipos de diagnóstico</p>
+      <h2>Glucómetro y Foco Pupilar</h2>
+      <p class="objective">El glucómetro implica una punción — requiere más cuidado con la bioseguridad que los demás equipos.</p>
+      <div class="card">
+        <h4>Glucómetro</h4>
+        <p><b>Pasos de uso:</b></p>
+        <ul>
+          <li>Colócate guantes. Limpia el dedo de la persona con una almohadilla de alcohol y deja secar.</li>
+          <li>Punciona el costado del dedo con la lanceta.</li>
+          <li>Coloca la gota de sangre en la tira reactiva ya insertada en el glucómetro.</li>
+          <li>Espera el resultado en pantalla. Desecha la lanceta y la tira en la bolsa infecciosa.</li>
+        </ul>
+        <table class="mini-table">
+          <tr><th>Lectura (mg/dL)</th><th>Interpretación</th></tr>
+          <tr><td class="label">70 – 100</td><td>Rango normal en ayunas.</td></tr>
+          <tr><td class="label">Menos de 70</td><td>Hipoglicemia — puede haber mareo, sudoración fría o confusión. Notificar de inmediato.</td></tr>
+          <tr><td class="label">Más de 180</td><td>Hiperglicemia — notificar y referir según protocolo.</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h4>Foco Pupilar</h4>
+        <p>Se usa para evaluar el tamaño y la reactividad de las pupilas a la luz — es parte de la revisión neurológica (la "D" del protocolo XABCDE que ya viste en otro módulo).</p>
+        <ul>
+          <li>Acerca el foco a un lado del ojo y observa si la pupila se contrae.</li>
+          <li>Pupilas iguales en tamaño y que reaccionan a la luz = normal.</li>
+          <li>Pupilas desiguales, o que no reaccionan = señal de alerta — notificar de inmediato.</li>
+        </ul>
+      </div>
+      <div class="card gold">
+        <h4>Esfigmomanómetro (Digital y Manual)</h4>
+        <p>El uso completo de este equipo ya lo cubrimos a fondo en el módulo <b>"Toma de Presión Arterial"</b> de esta misma ruta de capacitación — técnica, puntos anatómicos y valores de referencia.</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="goTo('sec-diagnostico1')">← Atrás</button>
+        <button class="btn" onclick="goTo('sec-quiz')">Siguiente → Autoevaluación</button>
+      </div>
+    </section>
+
+    <section id="sec-quiz">
+      <p class="module-eyebrow">06 · Evaluación</p>
+      <h2>Autoevaluación Final</h2>
+      <p style="font-size:14px; color:var(--ink-soft); margin-bottom:14px;">10 preguntas sobre el uso del botiquín. Semáforo: <span class="tag green">Verde ≥90%</span> <span class="tag">Amarillo 70–89%</span> <span class="tag red">Rojo &lt;70%</span></p>
+      <div id="quizContainer"></div>
+      <div class="btn-row"><button class="btn secondary" onclick="goTo('sec-diagnostico2')">← Atrás</button><button class="btn" id="quizSubmit" onclick="submitQuiz()">Calificar</button></div>
+      <div id="quizResult"></div>
+
+      <div class="card" id="registroCard" style="margin-top:20px;">
+        <h4>Registrar en la Matriz de Brigadas (hoja CAP_MENSUAL)</h4>
+        <p>Completa estos datos y genera una fila lista para pegar en tu Excel — empieza en la columna <b>NOMBRE BRIGADISTA</b>, en una fila nueva.</p>
+        <div class="grid2">
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Nombre completo</label>
+            <input id="regNombre" type="text" placeholder="Ej. Karen Solís Vargas" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Área</label>
+            <input id="regArea" list="areaList" type="text" placeholder="Ej. Inyección" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+            <datalist id="areaList">
+              <option value="Taller de Moldes"><option value="Ensamble"><option value="Administración">
+              <option value="Almacén"><option value="Mantenimiento"><option value="Calidad"><option value="Inyección">
+            </datalist>
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Grupo</label>
+            <input id="regGrupo" list="grupoList" type="text" placeholder="Ej. Grupo A" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+            <datalist id="grupoList">
+              <option value="Grupo A"><option value="Grupo B"><option value="Grupo C"><option value="Grupo D"><option value="Grupo Especial Dia">
+            </datalist>
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Instructor / Responsable</label>
+            <input id="regInstructor" type="text" value="Autoestudio (EVA)" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+          </div>
+          <div>
+            <label class="mono" style="font-size:11px; color:var(--ink-soft); display:block; margin-bottom:4px;">Práctica pendiente</label>
+            <select id="regPractica" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-family:'Source Sans 3'; font-size:14px;">
+              <option value="SÍ">SÍ</option>
+              <option value="NO">NO</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn secondary" onclick="generarResumen()">Generar fila para copiar</button></div>
+        <div id="resumenOutput" style="display:none; margin-top:14px;">
+          <textarea id="resumenText" readonly style="width:100%; min-height:60px; font-family:'IBM Plex Mono'; font-size:12px; padding:10px; border:1px solid var(--line); border-radius:8px; background:#fff;"></textarea>
+          <div class="btn-row" style="align-items:center;">
+            <button class="btn" onclick="copiarResumen()">📋 Copiar fila</button>
+            <button class="btn secondary" onclick="enviarWhatsApp()">📤 Enviar por WhatsApp</button>
+            <span id="copyMsg" class="mono" style="font-size:12px; color:var(--green);"></span>
+          </div>
+          <p style="font-size:12.5px; color:var(--ink-soft); margin-top:6px;">Pega esta fila en <b>CAP_MENSUAL</b>, empezando en la columna <b>NOMBRE BRIGADISTA</b>.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="foot">ElectroPlast · Brigada de Emergencia — Uso del Botiquín de Emergencia</footer>
+
+<script>
+/* ---------------- NAV / STEPPER ---------------- */
+const sections = [
+  {id:'sec-intro', title:'Introducción'},
+  {id:'sec-bioseguridad', title:'01 · Bioseguridad'},
+  {id:'sec-curacion', title:'02 · Limpieza y Curación'},
+  {id:'sec-inmovilizacion', title:'03 · Inmovilización'},
+  {id:'sec-friocalor', title:'04 · Frío y Calor'},
+  {id:'sec-diagnostico1', title:'05 · Oxímetro/Termómetro'},
+  {id:'sec-diagnostico2', title:'05 · Glucómetro/Foco'},
+  {id:'sec-quiz', title:'06 · Evaluación'}
+];
+const visited = new Set(['sec-intro']);
+const stepper = document.getElementById('stepper');
+sections.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.className = 'step-item';
+  b.id = 'navbtn-'+s.id;
+  b.innerHTML = `<span class="step-num mono" id="num-${s.id}">${i+1}</span><span class="step-title">${s.title}</span>`;
+  b.onclick = ()=>goTo(s.id);
+  stepper.appendChild(b);
+});
+function updateProgress(){
+  const pct = Math.round((visited.size/sections.length)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = visited.size+' / '+sections.length+' secciones';
+}
+function goTo(id){
+  sections.forEach(s=>document.getElementById(s.id).classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  visited.add(id);
+  sections.forEach(s=>{
+    const b = document.getElementById('navbtn-'+s.id);
+    b.classList.toggle('active', s.id===id);
+    document.getElementById('num-'+s.id).classList.toggle('done', visited.has(s.id) && s.id!==id);
+  });
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+goTo('sec-intro');
+
+/* ---------------- QUIZ ---------------- */
+let lastQuizPct = null;
+const quiz = [
+  {q:'¿Cuándo se debe cambiar de guantes desechables?', a:['Nunca, duran toda la jornada','Entre personas distintas, o si se rompen o contaminan','Solo al final del día','Solo si están visiblemente sucios por fuera'], c:1},
+  {q:'¿Dónde se desecha una gasa usada con sangre?', a:['En la basura común','En la bolsa infecciosa','Se lava y se reutiliza','En el suero fisiológico'], c:1},
+  {q:'¿Para qué se usa principalmente el suero fisiológico?', a:['Para beber en caso de deshidratación','Para irrigar y limpiar heridas o los ojos','Para desinfectar el glucómetro','Para inflar la bolsa térmica'], c:1},
+  {q:'¿Cuándo se usa el inmovilizador de cuello (collarín)?', a:['En cualquier curación menor','Ante sospecha de trauma de cuello','Solo para quemaduras','Para medir la presión arterial'], c:1},
+  {q:'¿Para qué sirven las tijeras de punta redonda del botiquín?', a:['Para cortar gasas únicamente','Para cortar ropa y exponer una lesión sin riesgo de cortar a la persona','Para cortar vendajes de otras personas','No tienen un uso definido'], c:1},
+  {q:'¿Cuál es la regla más importante al usar la bolsa térmica?', a:['Aplicarla directo sobre la piel','Nunca en contacto directo con la piel, siempre envuelta en tela','Dejarla puesta toda la noche','Usarla solo en heridas abiertas'], c:1},
+  {q:'Una lectura de oxímetro de 90% o menos se considera:', a:['Normal','Señal de alerta leve','Urgencia — notificar de inmediato','Un error del equipo, se ignora'], c:2},
+  {q:'¿Qué mide el glucómetro?', a:['La temperatura corporal','La saturación de oxígeno','La glucosa en sangre','La presión arterial'], c:2},
+  {q:'Una lectura de glucosa menor a 70 mg/dL indica:', a:['Hiperglicemia, sin urgencia','Hipoglicemia — puede haber mareo o confusión, notificar de inmediato','Que el equipo necesita calibrarse','Un valor normal para cualquier persona'], c:1},
+  {q:'¿Para qué se usa el foco pupilar?', a:['Para medir la temperatura del ojo','Para evaluar el tamaño y reactividad de las pupilas a la luz','Para desinfectar heridas en la cara','Para iluminar el área de trabajo'], c:1},
+];
+const quizContainer = document.getElementById('quizContainer');
+quiz.forEach((item,qi)=>{
+  const div = document.createElement('div');
+  div.className = 'quiz-q';
+  let optsHtml = '';
+  item.a.forEach((opt,oi)=>{
+    optsHtml += `<label class="q-opt"><input type="radio" name="q${qi}" value="${oi}"> <span>${opt}</span></label>`;
+  });
+  div.innerHTML = `<p class="q-text">${qi+1}. ${item.q}</p>${optsHtml}`;
+  quizContainer.appendChild(div);
+});
+function submitQuiz(){
+  let correct = 0;
+  quiz.forEach((item,qi)=>{
+    const sel = document.querySelector(`input[name="q${qi}"]:checked`);
+    if(sel && parseInt(sel.value) === item.c) correct++;
+  });
+  const pct = Math.round((correct/quiz.length)*100);
+  let color, label;
+  if(pct >= 90){color='green'; label='VERDE — Dominado';}
+  else if(pct >= 70){color='amber'; label='AMARILLO — Repasar puntos débiles';}
+  else {color='red'; label='ROJO — Requiere repaso del módulo';}
+  const bg = color==='green' ? 'var(--green-bg)' : color==='amber' ? 'var(--amber-bg)' : 'var(--red-bg)';
+  const fg = color==='green' ? 'var(--green)' : color==='amber' ? '#8A5E10' : 'var(--red)';
+  const resultDiv = document.getElementById('quizResult');
+  resultDiv.innerHTML = `
+    <div class="quiz-result" style="background:${bg}; border:1px solid var(--line);">
+      <p class="score mono" style="color:${fg};">${pct}%</p>
+      <p style="margin:2px 0 0; color:var(--ink-soft);">${correct} de ${quiz.length} correctas</p>
+      <span class="semaforo tag ${color}">${label}</span>
+    </div>`;
+  resultDiv.scrollIntoView({behavior:'smooth', block:'center'});
+  lastQuizPct = pct;
+}
+
+function generarResumen(){
+  const nombre = document.getElementById('regNombre').value.trim();
+  if(!nombre){ alert('Escribe el nombre completo del brigadista.'); return; }
+  if(lastQuizPct === null){ alert('Primero presiona "Calificar" en la autoevaluación de arriba.'); return; }
+  const area = document.getElementById('regArea').value.trim();
+  const grupo = document.getElementById('regGrupo').value.trim();
+  const instructor = document.getElementById('regInstructor').value.trim();
+  const practica = document.getElementById('regPractica').value;
+  const fecha = new Date().toISOString().slice(0,10);
+  const tipo = 'Uso del Botiquín de Emergencia';
+  const modalidad = 'Video Autoestudio';
+  const asistencia = '1';
+  const resultado = lastQuizPct >= 80 ? 'APROBADO' : 'REPROBADO';
+  const obs = 'Completado en módulo digital autoevaluado (EVA) el ' + fecha;
+  const row = [nombre, area, grupo, tipo, fecha, modalidad, instructor, asistencia, lastQuizPct, resultado, practica, obs].join('\t');
+  document.getElementById('resumenText').value = row;
+  document.getElementById('resumenOutput').style.display = 'block';
+  document.getElementById('resumenOutput').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function copiarResumen(){
+  const el = document.getElementById('resumenText');
+  el.focus(); el.select(); el.setSelectionRange(0, 99999);
+  const msg = document.getElementById('copyMsg');
+  try{
+    document.execCommand('copy');
+    msg.textContent = '✓ Copiado — pégalo en CAP_MENSUAL';
+  }catch(e){
+    msg.textContent = 'Selecciona el texto y usa Ctrl+C';
+  }
+  setTimeout(()=>{ msg.textContent=''; }, 4000);
+}
+function enviarWhatsApp(){
+  const text = document.getElementById('resumenText').value;
+  if(!text){ alert('Primero presiona "Generar fila para copiar".'); return; }
+  const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+</script>
+</body>
+</html>
